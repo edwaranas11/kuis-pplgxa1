@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kuis PPLG - Multi Topik</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f7f9;
+      color: #333;
+    }
+    header {
+      text-align: center;
+      padding: 20px;
+      background-color: #1e3a8a;
+      color: white;
+    }
+    header img {
+      width: 80px;
+      margin-bottom: 10px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #1e3a8a;
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    .options label {
+      display: block;
+      padding: 10px;
+      border: 1px solid #ccc;
+      margin-bottom: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #f9f9f9;
+      transition: background 0.2s;
+    }
+    .options label:hover {
+      background-color: #e0e7ff;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #1e3a8a;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #3749a2;
+    }
+    .result {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #d1fae5;
+      border-left: 5px solid #10b981;
+      border-radius: 5px;
+      display: none;
+    }
+    .correct {
+      background-color: #d1fae5;
+      border-color: #10b981;
+    }
+    .incorrect {
+      background-color: #fee2e2;
+      border-color: #ef4444;
+    }
+    .feedback {
+      font-weight: bold;
+      margin-top: 5px;
+    }
+    @media screen and (max-width: 600px) {
+      .container {
+        margin: 10px;
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://edwaranas11.github.io/soal-pplg1/LOGO%20SMK.png" alt="Logo Sekolah" />
+    <h1>Kuis PPLG - Multi Topik</h1>
+    <p>Oleh Edwar Anas, S.Kom</p>
+  </header>
+
+  <div class="container" id="quiz-container">
+    <form id="quizForm"></form>
+    <div class="result" id="resultBox"></div>
+    <button type="button" onclick="submitQuiz()">Selesai</button>
+    <button type="button" onclick="location.reload()" style="display: none;" id="retryBtn">Coba Lagi</button>
+  </div>
+
+  <script>
+    const questions = [
+  // Sejarah dan Perkembangan Teknologi
+  { question: "1. Revolusi industri pertama ditandai dengan penggunaan…", options: ["Mesin uap", "Listrik", "Komputer", "Internet"], answer: 0 },
+  { question: "2. Penemuan transistor pada tahun 1947 berperan penting dalam…", options: ["Perkembangan komputer modern", "Penemuan roda", "Teknologi mesin uap", "Penemuan telepon"], answer: 0 },
+  { question: "3. Internet mulai populer secara global pada dekade…", options: ["1960-an", "1970-an", "1990-an", "2010-an"], answer: 2 },
+
+  // Multimedia dan Desain Digital
+  { question: "4. Software yang sering digunakan untuk desain grafis adalah…", options: ["Photoshop", "Microsoft Excel", "MySQL", "Windows Media Player"], answer: 0 },
+  { question: "5. Format file gambar yang mendukung transparansi adalah…", options: ["JPEG", "PNG", "BMP", "TIFF"], answer: 1 },
+  { question: "6. Animasi 3D biasanya dibuat menggunakan software seperti…", options: ["Blender", "Notepad", "PowerPoint", "Excel"], answer: 0 },
+
+  // Business Intelligence dan Analitik Bisnis
+  { question: "7. Business Intelligence (BI) digunakan untuk…", options: ["Analisis data bisnis", "Membuat musik", "Desain grafis", "Main game"], answer: 0 },
+  { question: "8. Salah satu contoh tools BI adalah…", options: ["Tableau", "Photoshop", "CorelDraw", "Premiere Pro"], answer: 0 },
+  { question: "9. Data warehouse berfungsi untuk…", options: ["Menyimpan dan mengintegrasikan data dari berbagai sumber", "Mengedit video", "Menyimpan file musik", "Membuat website"], answer: 0 },
+
+  // Teknologi Kendaraan Cerdas
+  { question: "10. Teknologi yang memungkinkan mobil berjalan tanpa pengemudi disebut…", options: ["Self-driving car", "Remote control car", "E-bike", "Drone"], answer: 0 },
+  { question: "11. Sistem bantuan pengemudi modern biasanya menggunakan…", options: ["Sensor dan kecerdasan buatan", "Mesin tik", "Joystick", "Printer"], answer: 0 },
+  { question: "12. Kendaraan listrik menggunakan sumber energi dari…", options: ["Baterai", "Bensin", "Gas alam", "Uap"], answer: 0 },
+
+  // Blockchain dan Teknologi Desentralisasi
+  { question: "13. Blockchain pada dasarnya adalah…", options: ["Basis data terdistribusi", "Jaringan sosial", "Bahasa pemrograman", "Aplikasi chatting"], answer: 0 },
+  { question: "14. Contoh penerapan blockchain selain cryptocurrency adalah…", options: ["Supply chain management", "Microsoft Word", "Photoshop", "Browser"], answer: 0 },
+  { question: "15. Salah satu keunggulan blockchain adalah…", options: ["Transparansi dan keamanan data", "Mudah rusak", "Sulit diakses", "Tidak ada enkripsi"], answer: 0 },
+
+  // Etika, Hukum, dan Kebijakan Teknologi
+  { question: "16. Salah satu isu utama dalam etika teknologi adalah…", options: ["Privasi data", "Harga makanan", "Cuaca", "Transportasi umum"], answer: 0 },
+  { question: "17. Hukum terkait perlindungan data pribadi di Indonesia diatur dalam…", options: ["UU PDP (Perlindungan Data Pribadi)", "UU Lalu Lintas", "UU Perikanan", "UU Pajak"], answer: 0 },
+  { question: "18. Kebijakan teknologi bertujuan untuk…", options: ["Mengatur penggunaan teknologi agar aman dan bermanfaat", "Menghapus internet", "Meningkatkan polusi", "Mengurangi literasi digital"], answer: 0 },
+
+  // Machine Learning dan Data
+  { question: "19. Machine Learning merupakan cabang dari…", options: ["Artificial Intelligence (AI)", "Fisika", "Biologi", "Ekonomi"], answer: 0 },
+  { question: "20. Proses pelatihan machine learning membutuhkan…", options: ["Data dalam jumlah besar", "Kertas", "Pensil", "Mesin ketik"], answer: 0 }
+];
+
+
+    const quizForm = document.getElementById("quizForm");
+    questions.forEach((q, index) => {
+      const div = document.createElement("div");
+      div.className = "question";
+      div.innerHTML = `<h2>${q.question}</h2><div class="options">` +
+        q.options.map((opt, i) => `
+          <label>
+            <input type="radio" name="q${index}" value="${i}"/> ${opt}
+          </label>`).join("") +
+        `</div><div class="feedback" id="feedback${index}"></div>`;
+      quizForm.appendChild(div);
+    });
+
+    function submitQuiz() {
+      const answers = questions.map((_, i) =>
+        document.querySelector(`input[name="q${i}"]:checked`)
+      );
+
+      if (answers.includes(null)) {
+        alert("Silakan jawab semua soal terlebih dahulu!");
+        return;
+      }
+
+      let score = 0;
+      answers.forEach((ans, i) => {
+        const correct = questions[i].answer;
+        const feedbackEl = document.getElementById(`feedback${i}`);
+        const labels = document.querySelectorAll(`input[name="q${i}"]`);
+
+        labels.forEach(input => {
+          const label = input.closest("label");
+          label.classList.remove("correct", "incorrect");
+          if (parseInt(input.value) === correct) {
+            label.classList.add("correct");
+          }
+        });
+
+        if (parseInt(ans.value) === correct) {
+          score++;
+          feedbackEl.textContent = "✔ Benar";
+          feedbackEl.style.color = "green";
+        } else {
+          feedbackEl.textContent = `✖ Salah. Jawaban yang benar: ${questions[i].options[correct]}`;
+          feedbackEl.style.color = "red";
+          ans.closest("label").classList.add("incorrect");
+        }
+      });
+
+      const resultBox = document.getElementById("resultBox");
+      resultBox.style.display = "block";
+      resultBox.innerHTML = `<strong>Skor Kamu: ${score} / ${questions.length}</strong><br>Terus semangat belajar ya!`;
+
+      document.querySelector("button[onclick='submitQuiz()']").style.display = "none";
+      document.getElementById("retryBtn").style.display = "inline-block";
+    }
+  </script>
+</body>
+</html>
